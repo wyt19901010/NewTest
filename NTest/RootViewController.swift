@@ -16,6 +16,7 @@ class RootViewController: UIViewController {
   fileprivate func initLabel() {
     firstLabel = UILabel(frame: .zero)
     self.view.addSubview(firstLabel)
+
     firstLabel.text = "Hello World"
     firstLabel.textAlignment = .center
   }
@@ -25,16 +26,19 @@ class RootViewController: UIViewController {
     super.viewDidLoad()
     
     initLabel()
+
   }
   
   override func viewDidLayoutSubviews() {
     makeConstraints()
+
   }
   
     fileprivate func makeConstraints() {
       firstLabel.snp.makeConstraints { (make) in
         make.width.height.equalTo(firstLabel.intrinsicContentSize)
         make.center.equalTo(super.view.center)
+       // make.top.left.width.height.equalTo(200)
       }
   }
 }
