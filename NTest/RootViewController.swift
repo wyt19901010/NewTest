@@ -16,6 +16,17 @@ class RootViewController: UIViewController {
   fileprivate var firstButton: UIButton!
   fileprivate var firstLabel: UILabel!
   
+  fileprivate var firstTextField: UITextField!
+  fileprivate var firstTextView: UITextView!
+  //fileprivate var filedLabel: UILabel!
+  
+  
+  fileprivate var leftSwitch: UISwitch!
+  fileprivate var rightSwitch: UISwitch!
+  //fileprivate var slideValue: UILabel!
+  
+  fileprivate var segmentedControl: UISegmentedControl!
+  
   // MARK: Initialization
   fileprivate func initLabel() {
     firstLabel = UILabel(frame: .zero)
@@ -49,6 +60,50 @@ class RootViewController: UIViewController {
     firstButton.addTarget(self, action: #selector(clickUp), for: UIControlEvents.touchUpInside)
   }
   
+  fileprivate func initFirstTextField() {
+    firstTextField = UITextField(frame: .zero)
+    self.view.addSubview(firstTextField)
+    
+    firstTextField.borderStyle = UITextBorderStyle.bezel
+    firstTextField.text = "WERVG"
+    firstTextField.delegate = self as UITextFieldDelegate
+  }
+  
+  fileprivate func initFirstTextView() {
+   firstTextView = UITextView(frame: .zero)
+    self.view.addSubview(firstTextView)
+    
+    firstTextView.text = "aaaaaaaaa"
+    firstTextView.delegate = self as UITextViewDelegate
+  }
+  
+  
+  fileprivate func initLeftSwitch() {
+    leftSwitch = UISwitch(frame: .zero)
+    self.view.addSubview(leftSwitch)
+    leftSwitch.isOn = true
+    
+   // leftSwitch.addTarget(self, action: #selector(switchDown), for: .valueChanged)
+    
+  }
+  
+  fileprivate func initRightSwitch() {
+    rightSwitch = UISwitch(frame: .zero)
+    self.view.addSubview(rightSwitch)
+    rightSwitch.isOn = true
+    
+    rightSwitch.addTarget(self, action: #selector(switchDown), for: .valueChanged)
+    
+  }
+  
+  fileprivate func initSegmentedControl() {
+    segmentedControl = UISegmentedControl(items: ["left","right"])
+    self.view.addSubview(segmentedControl)
+    
+    segmentedControl.frame = .zero
+    segmentedControl.addTarget(self, action: #selector(controlBottomHide), for: .valueChanged)
+  }
+  
   // MARK: Life circle
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -56,6 +111,21 @@ class RootViewController: UIViewController {
     // Init subview
     initLabel()
     initFirstButton()
+    initFirstTextField()
+    initFirstTextView()
+    initLeftSwitch()
+    initRightSwitch()
+    initSegmentedControl()
+    // Close keyboard
+    let tap = UITapGestureRecognizer(target: self, action: #selector(tapped))
+    super.view.addGestureRecognizer(tap)
+   
+  }
+  
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(true)
+
   }
   
   // MARK: Constraints
@@ -63,11 +133,12 @@ class RootViewController: UIViewController {
     makeConstraints()
   }
   
+  
   fileprivate func makeConstraints() {
     // First label constraint
     firstLabel.snp.makeConstraints { (make) in
       make.width.height.equalTo(100)
-      make.center.equalTo(super.view.center)
+      make.top.left.equalToSuperview().offset(32)
       // make.top.left.width.height.equalTo(200)
     }
     
@@ -75,6 +146,37 @@ class RootViewController: UIViewController {
       make.top.equalTo(firstLabel.snp.bottom).offset(32)
       make.left.equalTo(firstLabel.snp.left)
       make.width.height.equalTo(100)
+    }
+    
+    firstTextView.snp.makeConstraints { (make) in
+      make.top.equalTo(firstButton.snp.bottom).offset(32)
+      make.left.equalTo(firstButton)
+      make.width.height.equalTo(100)
+    }
+    
+    firstTextField.snp.makeConstraints { (make) in
+      make.top.equalTo(firstTextView.snp.bottom).offset(32)
+      make.left.equalTo(firstButton)
+      make.width.height.equalTo(firstTextField.intrinsicContentSize)
+    }
+    
+    rightSwitch.snp.makeConstraints { (make) in
+      make.top.equalToSuperview().offset(32)
+      make.right.equalToSuperview().offset(-32)
+      make.height.width.equalTo(50)
+    }
+    
+    leftSwitch.snp.makeConstraints { (make) in
+      make.top.equalToSuperview().offset(32)
+      make.right.equalTo(rightSwitch.snp.left).offset(-32)
+      make.height.width.equalTo(50)
+    }
+    
+    segmentedControl.snp.makeConstraints { (make) in
+      make.top.equalTo(leftSwitch.snp.bottom).offset(32)
+      make.right.equalToSuperview().offset(-16)
+      make.width.equalTo(200)
+      make.height.equalTo(50)
     }
   }
   
@@ -94,7 +196,56 @@ class RootViewController: UIViewController {
       firstButton.setTitle("button", for: .normal)
   }
   // MARK: Methods
+
+  @objc func tapped() {
+    view.endEditing(true)
+  }
   
+  @objc func controlBottomHide() {
+    print("begin to hide")
+    if (rightSwitch.isHidden == false && leftSwitch.isHidden == false) {
+      rightSwitch.isHidden = true
+      leftSwitch.isHidden = true
+    }else {
+      rightSwitch.isHidden = false
+      leftSwitch.isHidden = false
+    }
+  }
+  
+  @objc func switchDown() {
+    print("asdfsaf")
+    print(time)
+    print(rightSwitch.isOn)
+    if (rightSwitch.isOn == true) || ( leftSwitch.isOn == true) {
+      rightSwitch.setOn(false, animated: true)
+      leftSwitch.setOn(false, animated: true)
+    }else  if (rightSwitch.isOn == false) || ( leftSwitch.isOn == false) {
+      rightSwitch.setOn(true, animated: true)
+      leftSwitch.setOn(true, animated: true)
+    }
+  }
+}
+
+extension RootViewController: UITextFieldDelegate,UITextViewDelegate {
+  
+  func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    print("aaaaaaadrgfdgcgh")
+   // textField.resignFirstResponder()
+    view.endEditing(true)
+    return true
+  }
+  
+  func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+    if ( text == "\n") || ( text == "a") {
+      print("237894738952")
+    //  textView.resignFirstResponder()
+      view.endEditing(true)
+      return false
+    }
+    return true
+  }
+  
+
   
   
 }
