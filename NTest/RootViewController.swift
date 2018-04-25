@@ -27,6 +27,8 @@ class RootViewController: UIViewController {
   
   fileprivate var segmentedControl: UISegmentedControl!
   
+  fileprivate var firstSlider: UISlider!
+  
   // MARK: Initialization
   fileprivate func initLabel() {
     firstLabel = UILabel(frame: .zero)
@@ -97,11 +99,26 @@ class RootViewController: UIViewController {
   }
   
   fileprivate func initSegmentedControl() {
+    
     segmentedControl = UISegmentedControl(items: ["left","right"])
     self.view.addSubview(segmentedControl)
     
     segmentedControl.frame = .zero
     segmentedControl.addTarget(self, action: #selector(controlBottomHide), for: .valueChanged)
+  }
+  
+  fileprivate func initFirstSlider() {
+    firstSlider = UISlider(frame: .zero)
+    self.view.addSubview(firstSlider)
+    
+    
+    firstSlider.maximumValue = 100.0
+    firstSlider.minimumValue = 0.0
+    firstSlider.value = 50
+    
+    firstLabel.text = String(firstSlider.value )
+    
+    firstSlider.addTarget(self, action: #selector(changeValueText), for: .valueChanged)
   }
   
   // MARK: Life circle
@@ -116,6 +133,7 @@ class RootViewController: UIViewController {
     initLeftSwitch()
     initRightSwitch()
     initSegmentedControl()
+    initFirstSlider()
     // Close keyboard
     let tap = UITapGestureRecognizer(target: self, action: #selector(tapped))
     super.view.addGestureRecognizer(tap)
@@ -178,6 +196,12 @@ class RootViewController: UIViewController {
       make.width.equalTo(200)
       make.height.equalTo(50)
     }
+    
+    firstSlider.snp.makeConstraints { (make) in
+      make.bottom.right.equalToSuperview().offset(-32)
+      make.width.equalTo(300)
+      make.height.equalTo(50)
+    }
   }
   
   
@@ -223,6 +247,10 @@ class RootViewController: UIViewController {
       rightSwitch.setOn(true, animated: true)
       leftSwitch.setOn(true, animated: true)
     }
+  }
+  
+  @objc func changeValueText() {
+    firstLabel.text = String(Double(Int(firstSlider.value * 10))/10)
   }
 }
 
