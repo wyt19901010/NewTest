@@ -102,7 +102,7 @@ class RootViewController: UIViewController {
     
     segmentedControl = UISegmentedControl(items: ["left","right"])
     self.view.addSubview(segmentedControl)
-    
+
     segmentedControl.frame = .zero
     segmentedControl.addTarget(self, action: #selector(controlBottomHide), for: .valueChanged)
   }
@@ -116,7 +116,7 @@ class RootViewController: UIViewController {
     firstSlider.minimumValue = 0.0
     firstSlider.value = 50
     
-    firstLabel.text = String(firstSlider.value )
+    //firstLabel.text = String(firstSlider.value )
     
     firstSlider.addTarget(self, action: #selector(changeValueText), for: .valueChanged)
   }
